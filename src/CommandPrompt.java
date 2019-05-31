@@ -2,36 +2,45 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Fenwick Software Technical Task
+ *
  * @author Kel-PC
  */
 public class CommandPrompt {
-    
+
+    FileUtility fl = new FileUtility();
+
+    /**
+     * Constructor for CommandPrompt Class
+     *
+     * @param arguments the arguments needed to run the application
+     */
     public CommandPrompt(String[] arguments) {
-       switch (checkInputs(arguments)) {
-           case RECORD:
-               performRecord(arguments);
-               break;
-           case SUMMARY:
-               //perform Summary;
-               break;
-           case HELP:
-               //perform HELP
-               break;
-           default:
-               //perform help'
-       }
+        switch (checkInputs(arguments)) {
+            case RECORD:
+                performRecord(arguments);
+                break;
+            case SUMMARY:
+                performSummary(arguments);
+                break;
+            case HELP:
+                performHelp();
+                break;
+            default:
+                performHelp();
+        }
     }
-    
-    private static InputType checkInputs (String[] inputs) {
-        if(Arrays.toString(inputs).contains(InputType.RECORD.label)) {
+
+    /**
+     * Method to check the input and return the correct enum to run
+     *
+     * @param inputs the arguments that will be checked to see what to run
+     *
+     * @return InputType Enum to know what method to run
+     */
+    private InputType checkInputs(String[] inputs) {
+        if (Arrays.toString(inputs).contains(InputType.RECORD.label)) {
             return InputType.RECORD;
         } else if (Arrays.toString(inputs).contains(InputType.SUMMARY.label)) {
             return InputType.SUMMARY;
@@ -39,8 +48,13 @@ public class CommandPrompt {
             return InputType.HELP;
         }
     }
-    
-    private static void performHelp() {
+
+    /**
+     * Generic method to provide instructions for users to know how to use the
+     * application
+     *
+     */
+    private void performHelp() {
         System.out.println("");
         System.out.println("+--------------+--------------+");
         System.out.println("Help Section");
@@ -49,53 +63,66 @@ public class CommandPrompt {
         System.out.println("This command will record the values 2 and 3 into the database filename.txt that can be read");
         System.out.println("Eg: summary filename.txt");
         System.out.println("This command will display a summary of the database filename.txt");
-        System.out.println("+--------------+--------------+"); 
+        System.out.println("+--------------+--------------+");
         System.out.println("");
     }
-    
-    
-    private static void performRecord(String[] records) {
-        
+
+    /**
+     * Method to check the input, write it into file
+     *
+     * @param records the arguments needed to add/write to file
+     *
+     */
+    private void performRecord(String[] records) {
+
         if (records.length < 3) {
             performHelp();
             return;
         }
         String fileName = records[1];
+
         ArrayList<String> recording = new ArrayList<>();
-        
+
         for (int i = 2; i < records.length; i++) {
             recording.add(records[i]);
         }
-        
-        if (FileUtility.writeToFile(recording, fileName)) {
+
+        if (fl.writeToFile(recording, fileName)) {
             System.out.println("Records successfully saved");
         } else {
             System.out.println("Error saving file.");
         }
-        
-        
+
     }
-    
-    private static void performSummary(String[] summary) {
-       if(summary.length < 2) {
-           System.out.println("Missing Parameters. Please try again");
-           performHelp();
-           return;
-       }
-       String fileName = summary[1];
-       FileUtility.readFromFile(fileName);
+
+    /**
+     * Method to check the input and return the correct enum to run
+     *
+     * @param summary the arguments allow the file to read the filename
+     *
+     */
+    private void performSummary(String[] summary) {
+        if (summary.length < 2) {
+            System.out.println("Missing Parameters. Please try again");
+            performHelp();
+            return;
+        }
+        String fileName = summary[1];
+        fl.readFromFile(fileName);
     }
-    
+
 }
 
-    
-
-
+/**
+ * Enum type to know what to use and returns the text based on what we need to
+ * perform
+ *
+ */
 enum InputType {
     RECORD("record"), SUMMARY("summary"), HELP("help");
-    
+
     public final String label;
-    
+
     private InputType(String label) {
         this.label = label;
     }
