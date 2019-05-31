@@ -83,9 +83,7 @@ public class CommandPrompt {
            return;
        }
        String fileName = summary[1];
-       
-       
-    
+       FileUtility.readFromFile(fileName);
     }
     
 }

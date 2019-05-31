@@ -67,15 +67,68 @@ public class FileUtility {
     
     private static void printSummary(ArrayList<String> txtInput) {
         
-//        DecimalFormat df = new DecimalFormat("####.0");
-//        String format = df.format()
+
         System.out.println("+--------------+-------+");
         System.out.println("| # of Entries | " + txtInput.size() + "\t|");
         System.out.println("| Min. Value   | " + minValue(txtInput) + "\t|");
         System.out.println("| Max. Value   | " + maxValue(txtInput) + "\t|");
-        System.out.println("| Avg. Value   | " + format(txtInput) + "\t|");
+        System.out.println("| Avg. Value   | " + getAverage(txtInput) + "\t|");
         System.out.println("+--------------+--------+");
 
     }
     
+    private static double minValue(ArrayList<String> txtInput) {
+        double min = 999999999;
+        int errors = 0;
+        for (String s : txtInput) {
+            try {
+                double num = Double.parseDouble(s);
+                if (num < min) {
+                    min = num;
+                }
+            } catch (Exception e) {
+                errors++;
+            }
+        }
+        if (errors > 0) {
+            System.out.println("There were " + errors + " errors in the file and were ignored.");
+        }        
+        return min;
+    }
+    
+    private static double maxValue(ArrayList<String> txtInput) {
+        double max = 0;
+        for (String s: txtInput) {
+            try {
+                double num = Double.parseDouble(s);
+                if (num > max) {
+                    max = num;
+                }
+            } catch (Exception e) {
+                // if min had any errors, it would be the same errors here. no point writing it out twice.
+            }
+        }
+        return max;
+    }
+    
+    private static String getAverage(ArrayList<String> txtInput) {
+        double sum = 0;
+        int count = 0;
+        for (String s: txtInput) {
+            try {
+                double num = Double.parseDouble(s);
+                sum += num;
+                count ++;
+            } catch (Exception e) {
+               // if min had any errors, it would be the same errors here. no point writing it out twice. 
+            }
+        }
+        
+        DecimalFormat df = new DecimalFormat("####.0");
+        String format = df.format(sum/count);
+        
+        return format;
+    }
 }
+
+
