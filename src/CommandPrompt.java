@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /*
@@ -13,13 +14,10 @@ import java.util.Arrays;
  */
 public class CommandPrompt {
     
-    private String[] arguments;
-
     public CommandPrompt(String[] arguments) {
-       this.arguments = arguments;
        switch (checkInputs(arguments)) {
            case RECORD:
-               //performRecording;
+               performRecord(arguments);
                break;
            case SUMMARY:
                //perform Summary;
@@ -41,9 +39,58 @@ public class CommandPrompt {
             return InputType.HELP;
         }
     }
+    
+    private static void performHelp() {
+        System.out.println("");
+        System.out.println("+--------------+--------------+");
+        System.out.println("Help Section");
+        System.out.println("Please note that there are only two commands to this program: record & summary");
+        System.out.println("Eg: record filename.txt 2 3");
+        System.out.println("This command will record the values 2 and 3 into the database filename.txt that can be read");
+        System.out.println("Eg: summary filename.txt");
+        System.out.println("This command will display a summary of the database filename.txt");
+        System.out.println("+--------------+--------------+"); 
+        System.out.println("");
+    }
+    
+    
+    private static void performRecord(String[] records) {
+        
+        if (records.length < 3) {
+            performHelp();
+            return;
+        }
+        String fileName = records[1];
+        ArrayList<String> recording = new ArrayList<>();
+        
+        for (int i = 2; i < records.length; i++) {
+            recording.add(records[i]);
+        }
+        
+        if (FileUtility.writeToFile(recording, fileName)) {
+            System.out.println("Records successfully saved");
+        } else {
+            System.out.println("Error saving file.");
+        }
+        
+        
+    }
+    
+    private static void performSummary(String[] summary) {
+       if(summary.length < 2) {
+           System.out.println("Missing Parameters. Please try again");
+           performHelp();
+           return;
+       }
+       String fileName = summary[1];
+       
+       
+    
+    }
+    
 }
 
-
+    
 
 
 enum InputType {
